@@ -5,156 +5,219 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <title>RADIO 95 – Live</title>
 
-<!-- PWA -->
-<link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#000000">
-<link rel="apple-touch-icon" href="icon-192.png">
-
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-
-/* ================= BODY ================= */
-body{
-    font-family:'Segoe UI',Arial,sans-serif;
-    height:100vh;
-    overflow:hidden;
-    color:#fff;
-    background:url("https://radio3h.neocities.org/turkey-logo-black-and-white.png") center/cover no-repeat;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-}
-body::before{
-    content:"";
-    position:fixed;
-    inset:0;
-    background:rgba(0,0,0,.55);
-    z-index:-2;
+/* === GLOBAL === */
+body {
+    margin: 0;
+    background: #000;
+    font-family: Arial, sans-serif;
+    overflow: hidden;
+    color: #fff;
 }
 
-/* ================= BANNIERES ================= */
-.banner{
-    position:fixed;
-    left:0;
-    width:100%;
-    height:38px;
-    overflow:hidden;
-    background:rgba(0,0,0,.7);
-    backdrop-filter:blur(10px);
-    z-index:20;
-}
-.banner.top{top:0}
-.banner.bottom{bottom:0}
-
-.banner span{
-    white-space:nowrap;
-    display:inline-block;
-    padding-left:100%;
-    animation:scroll 15s linear infinite;
-    line-height:38px;
-    font-size:14px;
-    letter-spacing:1px;
-}
-@keyframes scroll{
-    from{transform:translateX(0)}
-    to{transform:translateX(-100%)}
+/* === BANNIERES === */
+.banner {
+    position: fixed;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    padding: 10px 0;
+    font-weight: bold;
+    z-index: 5;
+    background: linear-gradient(to right, transparent, rgba(255,255,255,0.1), transparent);
 }
 
-/* ================= CANVAS ================= */
-#particlesCanvas{
-    position:fixed;
-    inset:0;
-    z-index:-1;
+.banner span {
+    display: inline-block;
+    padding-left: 100%;
+    animation: bannerScroll 18s linear infinite;
 }
 
-/* ================= CARD ================= */
-.radio-card{
-    width:360px;
-    max-width:92%;
-    padding:22px;
-    border-radius:24px;
-    background:rgba(20,20,20,.18);
-    backdrop-filter:blur(20px);
-    border:1px solid rgba(255,255,255,.12);
-    text-align:center;
-    box-shadow:0 0 40px rgba(0,255,255,.25),0 0 25px rgba(255,0,255,.25);
+.banner.top { top: 0; }
+.banner.bottom { bottom: 0; }
+
+@keyframes bannerScroll {
+    from { transform: translateX(0); }
+    to { transform: translateX(-100%); }
 }
 
-/* ================= VISUAL ================= */
-.visual{margin:16px 0}
-.visual img{
-    width:100px;
-    height:100px;
-    border-radius:50%;
-    transition:.1s;
+/* === OVERLAY ENTREE === */
+#entryOverlay {
+    position: fixed;
+    inset: 0;
+    background: #000;
+    z-index: 999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    transition: opacity 1s ease;
 }
 
-/* ================= CONTROLS ================= */
-button{
-    margin-top:10px;
-    width:100%;
-    padding:10px;
-    border-radius:40px;
-    border:1px solid rgba(255,255,255,.2);
-    background:rgba(0,0,0,.65);
-    color:#fff;
-    font-size:14px;
-    letter-spacing:1px;
-    cursor:pointer;
-}
-button:hover{transform:scale(1.04)}
-
-.led{
-    width:9px;height:9px;
-    border-radius:50%;
-    background:gray;
-    display:inline-block;
-    margin-left:6px;
-}
-.led.playing{
-    background:#0f0;
-    box-shadow:0 0 6px #0f0;
+#particlesEntry {
+    position: absolute;
+    inset: 0;
 }
 
-/* ================= FOOTER ================= */
-.card-footer{
-    margin-top:14px;
-    font-size:11px;
-    letter-spacing:1px;
-    opacity:.75;
+/* TEXTE BIENVENUE GLOW DOUX ANIME */
+.entry-container {
+    position: relative;
+    z-index: 2;
+    text-align: center;
 }
 
-/* ================= MOBILE ================= */
-@media(max-width:600px){
-    body{
-        padding:38px 0;
-        align-items:center;
+.entry-container h1 {
+    font-size: 34px;
+    margin-bottom: 30px;
+    color: #fff;
+    text-shadow:
+        0 0 8px rgba(255,255,255,0.3),
+        0 0 15px rgba(255,255,255,0.25),
+        0 0 25px rgba(255,255,255,0.2);
+    animation: glowPulse 2.5s ease-in-out infinite alternate;
+}
+
+@keyframes glowPulse {
+    0% {
+        text-shadow:
+        0 0 6px rgba(255,255,255,0.2),
+        0 0 12px rgba(255,255,255,0.15),
+        0 0 20px rgba(255,255,255,0.1);
     }
-
-    .radio-card{
-        width:90%;
-        max-width:300px;
-        padding:14px;
-        border-radius:18px;
+    100% {
+        text-shadow:
+        0 0 10px rgba(255,255,255,0.35),
+        0 0 18px rgba(255,255,255,0.3),
+        0 0 28px rgba(255,255,255,0.25);
     }
+}
 
-    .radio-card h2{
-        font-size:15px;
-    }
+/* BOUTON ENTREE */
+#enterBtn {
+    padding: 16px 55px;
+    font-size: 26px;
+    background: transparent;
+    color: #fff;
+    border-radius: 18px;
+    border: 2px solid #fff;
+    cursor: pointer;
+    box-shadow: 0 0 10px rgba(255,255,255,0.3);
+    transition: transform 0.2s, box-shadow 0.3s;
+}
 
-    .visual img{
-        width:75px;
-        height:75px;
-    }
+#enterBtn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 20px rgba(255,255,255,0.5);
+}
 
-    button{
-        font-size:13px;
-        padding:9px;
-    }
+/* LOGO ENTREE */
+#movingLogo {
+    position: absolute;
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    z-index: 2;
+    pointer-events: none;
+    transition: transform 0.1s linear;
+}
 
-    .card-footer{
-        font-size:10px;
-    }
+/* === MAIN CONTENT === */
+#mainContent {
+    opacity: 0;
+    transition: opacity 1s ease;
+    position: fixed;
+    inset: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2;
+}
+
+/* === RADIO CARD === */
+.radio-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    padding: 20px 30px;
+    border-radius: 28px;
+    background: rgba(20,20,20,0.15); 
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(255,255,255,0.1);
+    box-shadow: 0 0 6px rgba(255,255,255,0.1), inset 0 0 8px rgba(255,255,255,0.05);
+    min-width: 280px;
+}
+
+/* TEXTE DEFILANT DANS LA CARD */
+.radio-text {
+    overflow: hidden;
+    white-space: nowrap;
+    width: 100%;
+    text-align: center;
+    font-size: 22px;
+    font-weight: bold;
+    text-shadow: 0 0 6px rgba(255,255,255,0.2);
+}
+
+.radio-text span {
+    display: inline-block;
+    padding-left: 100%;
+    animation: scrollText 12s linear infinite;
+}
+
+@keyframes scrollText {
+    from { transform: translateX(0); }
+    to { transform: translateX(-100%); }
+}
+
+/* LOGO RADIO CARD */
+.radio-logo img {
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    transition: transform 0.1s linear;
+}
+
+/* CONTROLS */
+.controls {
+    display: flex;
+    gap: 15px;
+}
+
+.ctrl-btn {
+    position: relative;
+    padding: 12px 24px;
+    border-radius: 12px;
+    background: rgba(0,0,0,0.7);
+    border: 2px solid rgba(255,255,255,0.2);
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+    box-shadow: 0 0 4px rgba(255,255,255,0.1);
+    transition: transform 0.2s;
+}
+
+.ctrl-btn:hover { transform: scale(1.05); }
+
+.led {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #111;
+    box-shadow: none;
+}
+
+.led.on {
+    background: #00ff55;
+    box-shadow: 0 0 4px #00ff55, 0 0 8px #00ff55;
+}
+
+/* === MOBILE === */
+@media(max-width:480px){
+    .controls { flex-direction: column; gap: 10px; }
 }
 </style>
 </head>
@@ -163,110 +226,145 @@ button:hover{transform:scale(1.04)}
 
 <!-- BANNIERES -->
 <div class="banner top">
-    <span>🎶 Bienvenue sur RADIO 95 • Streaming en direct • 🎶</span>
+    <span>🎶 RADIO 95 • Streaming en direct • 🎶</span>
 </div>
 <div class="banner bottom">
-    <span>🎶 Bienvenue sur RADIO 95 • Streaming en direct • 🎶</span>
+    <span>🎶 RADIO 95 • Streaming en direct • 🎶</span>
 </div>
 
-<canvas id="particlesCanvas"></canvas>
-
-<div class="radio-card">
-    <h2>RADIO 95 – En direct</h2>
-
-    <div class="visual">
-        <img id="logo" src="https://radio3h.neocities.org/turkey-logo-black-and-white.png">
+<!-- OVERLAY -->
+<div id="entryOverlay">
+    <canvas id="particlesEntry"></canvas>
+    <div class="entry-container">
+        <h1>Bienvenue sur RADIO 95</h1>
+        <button id="enterBtn">Entrer</button>
     </div>
+    <!-- LOGO QUI SE DÉPLACE -->
+    <img id="movingLogo" src="https://radio95.neocities.org/turkey-logo-black-and-white.png">
+</div>
 
-    <button id="playBtn">
-        PLAY <span class="led" id="led"></span>
-    </button>
+<canvas id="particlesBackground"></canvas>
 
-    <!-- FOOTER CARD -->
-    <div class="card-footer">
-        Streaming design by <strong>CuMaLi</strong>
+<!-- MAIN -->
+<div id="mainContent">
+    <div class="radio-card">
+        <div class="radio-text">
+            <span>RADIO 95 – En direct...</span>
+        </div>
+        <div class="radio-logo" id="logo">
+            <img src="https://radio95.neocities.org/turkey-logo-black-and-white.png">
+        </div>
+        <div class="controls">
+            <button class="ctrl-btn" id="playBtn">
+                ▶ PLAY
+                <span class="led" id="led"></span>
+            </button>
+            <button class="ctrl-btn" id="pauseBtn">
+                ⏸ PAUSE
+            </button>
+        </div>
+        <audio id="audio"></audio>
     </div>
-
-    <audio id="audio" autoplay></audio>
 </div>
 
 <script>
-// ================= AUDIO =================
+/* ===== AUDIO ===== */
 const audio = document.getElementById("audio");
 audio.src = "https://maradio.duckdns.org/stream";
 
 const playBtn = document.getElementById("playBtn");
+const pauseBtn = document.getElementById("pauseBtn");
 const led = document.getElementById("led");
 const logo = document.getElementById("logo");
 
-let audioCtx, analyser, dataArray;
+let audioCtx, analyser, data;
 
 function initAudio(){
     audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     analyser = audioCtx.createAnalyser();
+    analyser.fftSize = 128;
+    data = new Uint8Array(analyser.frequencyBinCount);
     const src = audioCtx.createMediaElementSource(audio);
     src.connect(analyser);
     analyser.connect(audioCtx.destination);
-    analyser.fftSize = 128;
-    dataArray = new Uint8Array(analyser.frequencyBinCount);
 }
 
-playBtn.onclick = () => {
+playBtn.onclick = async ()=>{
     if(!audioCtx) initAudio();
-    audio.paused ? audio.play() : audio.pause();
+    if(audioCtx.state==="suspended") await audioCtx.resume();
+    audio.play();
 };
 
-audio.onplay = () => led.classList.add("playing");
-audio.onpause = () => led.classList.remove("playing");
+pauseBtn.onclick = ()=> audio.pause();
+audio.onplay = ()=> led.classList.add("on");
+audio.onpause = ()=> led.classList.remove("on");
 
-// ================= PARTICULES =================
-const canvas = document.getElementById("particlesCanvas");
-const ctx = canvas.getContext("2d");
-
-function resize(){
-    canvas.width = innerWidth;
-    canvas.height = innerHeight;
+/* LOGO RADIO CARD PULSE */
+function glowMusic(){
+    if(!analyser) return;
+    analyser.getByteFrequencyData(data);
+    let avg = data.reduce((a,b)=>a+b)/data.length;
+    let scale = 1 + avg/700;
+    logo.style.transform = `scale(${scale})`;
+    requestAnimationFrame(glowMusic);
 }
-resize();
-addEventListener("resize", resize);
 
-const particles = [...Array(80)].map(() => ({
-    x: Math.random() * canvas.width,
-    y: Math.random() * canvas.height,
-    r: Math.random() * 2 + 1,
-    dx: (Math.random() - .5) * .4,
-    dy: (Math.random() - .5) * .4
-}));
+/* === PARTICLES === */
+class Particle{
+    constructor(c){this.c=c;this.ctx=c.getContext("2d");this.reset();}
+    reset(){ this.x=Math.random()*this.c.width; this.y=Math.random()*this.c.height; this.r=Math.random()*2+1; this.dx=(Math.random()-0.5); this.dy=(Math.random()-0.5);}
+    update(){ this.x+=this.dx; this.y+=this.dy; if(this.x<0||this.x>this.c.width) this.dx*=-1; if(this.y<0||this.y>this.c.height) this.dy*=-1;}
+    draw(){ this.ctx.fillStyle="rgba(255,255,255,0.6)"; this.ctx.beginPath(); this.ctx.arc(this.x,this.y,this.r,0,Math.PI*2); this.ctx.fill();}
+}
 
+function initParticles(id,n){
+    const c=document.getElementById(id);
+    const resize=()=>{c.width=innerWidth; c.height=innerHeight;}
+    resize(); addEventListener("resize",resize);
+    const p=Array.from({length:n},()=>new Particle(c));
+    return {c,ctx:c.getContext("2d"),p};
+}
+
+const p1=initParticles("particlesEntry",250);
+const p2=initParticles("particlesBackground",150);
+
+/* FADE OUT ENTREE */
+enterBtn.onclick=()=>{
+    entryOverlay.style.opacity=0;
+    setTimeout(()=>{
+        entryOverlay.remove();
+        mainContent.style.opacity=1;
+        glowMusic();
+    },1000);
+};
+
+/* ANIMATION PARTICULES */
 function animate(){
-    ctx.clearRect(0,0,canvas.width,canvas.height);
-    let avg = 0;
-
-    if(analyser && !audio.paused){
-        analyser.getByteFrequencyData(dataArray);
-        avg = dataArray.reduce((a,b)=>a+b,0)/dataArray.length;
-        logo.style.transform = `scale(${1+avg/260})`;
-    }
-
-    particles.forEach(p=>{
-        p.x += p.dx * (1 + avg/200);
-        p.y += p.dy * (1 + avg/200);
-        if(p.x<0)p.x=canvas.width;if(p.x>canvas.width)p.x=0;
-        if(p.y<0)p.y=canvas.height;if(p.y>canvas.height)p.y=0;
-        ctx.fillStyle="rgba(255,255,255,.35)";
-        ctx.beginPath();
-        ctx.arc(p.x,p.y,p.r*(1+avg/160),0,Math.PI*2);
-        ctx.fill();
+    [p1,p2].forEach(o=>{
+        o.ctx.clearRect(0,0,o.c.width,o.c.height);
+        o.p.forEach(p=>{p.update();p.draw();});
     });
-
     requestAnimationFrame(animate);
 }
 animate();
 
-// ================= PWA =================
-if("serviceWorker" in navigator){
-    navigator.serviceWorker.register("sw.js");
+/* LOGO QUI SE DÉPLACE DANS ENTRY */
+const movingLogo = document.getElementById("movingLogo");
+let lx = Math.random()*window.innerWidth;
+let ly = Math.random()*window.innerHeight;
+let ldx = (Math.random()-0.5)*2;
+let ldy = (Math.random()-0.5)*2;
+
+function moveLogo(){
+    lx += ldx;
+    ly += ldy;
+    if(lx < 0 || lx > window.innerWidth - 120) ldx *= -1;
+    if(ly < 0 || ly > window.innerHeight - 120) ldy *= -1;
+    movingLogo.style.left = lx + "px";
+    movingLogo.style.top = ly + "px";
+    requestAnimationFrame(moveLogo);
 }
+moveLogo();
 </script>
 
 </body>
