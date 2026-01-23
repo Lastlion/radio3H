@@ -239,7 +239,6 @@ body {
         <h1>Bienvenue sur RADIO 95</h1>
         <button id="enterBtn">Entrer</button>
     </div>
-    <!-- LOGO QUI SE DÉPLACE -->
     <img id="movingLogo" src="https://radio95.neocities.org/turkey-logo-black-and-white.png">
 </div>
 
@@ -328,14 +327,38 @@ function initParticles(id,n){
 const p1=initParticles("particlesEntry",250);
 const p2=initParticles("particlesBackground",150);
 
-/* FADE OUT ENTREE */
-enterBtn.onclick=()=>{
-    entryOverlay.style.opacity=0;
-    setTimeout(()=>{
+/* FADE OUT ENTREE + CHARGEMENT CHAT RUMBLETALK */
+const enterBtn = document.getElementById("enterBtn");
+const entryOverlay = document.getElementById("entryOverlay");
+const mainContent = document.getElementById("mainContent");
+
+enterBtn.onclick = () => {
+    entryOverlay.style.opacity = 0;
+    setTimeout(() => {
         entryOverlay.remove();
-        mainContent.style.opacity=1;
+        mainContent.style.opacity = 1;
         glowMusic();
-    },1000);
+
+        // === CHAT RUMBLETALK LIVE ===
+        const rtDiv = document.createElement("div");
+        rtDiv.id = "rt-7b266008c61defeb9047fa47c663abff";
+        rtDiv.setAttribute("data-floating", "true");
+        rtDiv.setAttribute("data-side", "right");
+        rtDiv.setAttribute("data-width", "450");
+        rtDiv.setAttribute("data-height", "500");
+        rtDiv.setAttribute("data-image", "https://rumbletalk-images-upload.s3.amazonaws.com/cp/7b266008c61defeb9047fa47c663abff/1769188963-1769188661427.png");
+        rtDiv.setAttribute("data-close-image", "https://rumbletalk-images-upload.s3.amazonaws.com/cp/7b266008c61defeb9047fa47c663abff/1769188971-1769188669570.png");
+        rtDiv.setAttribute("data-mobile-fullscreen", "true");
+        rtDiv.setAttribute("data-user-counter", "14,23");
+        rtDiv.setAttribute("data-message-counter", "0,60");
+        document.body.appendChild(rtDiv);
+
+        const rtScript = document.createElement("script");
+        rtScript.src = "https://rumbletalk.com/client/?CcRDGsN1";
+        rtScript.async = true;
+        document.body.appendChild(rtScript);
+
+    }, 1000);
 };
 
 /* ANIMATION PARTICULES */
